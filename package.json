@@ -10,7 +10,8 @@
     "lint": "ng lint",
     "format": "prettier --write \"src/**/*.{ts,scss,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,scss,json}\"",
-    "test": "ng test",
+    "test": "ng test --watch=false",
+    "test:watch": "ng test",
     "test:coverage": "ng test --coverage",
     "prepare": "husky",
     "commit": "cz"
