@@ -36,6 +36,9 @@
             "security": {
               "allowedHosts": []
             },
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/assets"]
+            },
             "ssr": {
               "entry": "src/server.ts"
             }
