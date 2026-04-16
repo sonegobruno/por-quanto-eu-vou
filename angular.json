@@ -16,7 +16,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "pqev",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
