@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GasolineCalculatePayload } from '../../entities/gasoline-calculate-payload';
 import { ROUND_TRIP_MULTIPLIER } from '../../constants/calculate';
-import { isLessThanOrEqual, isValidNumber } from '../../../shared/utils/number';
+import { isLessThanOrEqual, isValidNumber } from '@app/shared/utils/number';
 
 @Injectable()
 export class GasolineCalculatorService {
