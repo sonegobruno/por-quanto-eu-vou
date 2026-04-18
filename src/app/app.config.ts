@@ -12,6 +12,7 @@ import { logProviders } from './core/services/log/log-providers';
 import { ErrorHandlerService } from './core/services/error-handler/error-handler.service';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { snackbarServiceProvider } from './shared/services/snackbar/provider-snackbar';
 
 registerLocaleData(localePt);
 
@@ -24,5 +25,6 @@ export const appConfig: ApplicationConfig = {
     { provide: ErrorHandler, useClass: ErrorHandlerService },
     DatePipe,
     { provide: LOCALE_ID, useValue: 'pt' },
+    ...snackbarServiceProvider,
   ],
 };
