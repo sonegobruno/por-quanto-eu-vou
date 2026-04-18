@@ -7,4 +7,9 @@ export const routes: Routes = [
     pathMatch: 'full',
     component: HomeComponent,
   },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./not-found/pages/not-found/not-found.component').then(m => m.NotFoundComponent),
+  },
 ];
