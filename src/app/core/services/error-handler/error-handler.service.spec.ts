@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ErrorHandlerService } from './error-handler.service';
 import { LogService } from '../log/log.service';
+import { SnackbarService } from '@app/shared/services/snackbar/snackbar.service';
 
 describe('ErrorHandlerService', () => {
   let service: ErrorHandlerService;
@@ -13,6 +14,10 @@ describe('ErrorHandlerService', () => {
         {
           provide: LogService,
           useValue: { error: vi.fn() } as Pick<LogService, 'error'>,
+        },
+        {
+          provide: SnackbarService,
+          useValue: { open: vi.fn() } as Pick<SnackbarService, 'open'>,
         },
       ],
     });
@@ -30,5 +35,14 @@ describe('ErrorHandlerService', () => {
     service.handleError(testError);
 
     expect(logService.error).toHaveBeenCalledWith('Ocorreu um erro inesperado!', testError);
+  });
+
+  it('should show snackbar when handleError is called', () => {
+    const snackbarService = TestBed.inject(SnackbarService);
+    const testError = new Error('Test error');
+
+    service.handleError(testError);
+
+    expect(snackbarService.open).toHaveBeenCalledWith('Ocorreu um erro inesperado!');
   });
 });
