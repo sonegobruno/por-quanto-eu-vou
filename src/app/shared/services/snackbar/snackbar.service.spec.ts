@@ -31,7 +31,6 @@ describe('SnackbarService', () => {
 
     expect(snackBar.open).toHaveBeenCalledWith(message, undefined, {
       duration: 5000,
-      direction: 'rtl',
       verticalPosition: 'top',
       horizontalPosition: 'right',
     });
