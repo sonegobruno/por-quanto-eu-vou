@@ -7,7 +7,6 @@ export type SnackbarAdapter = {
     config?:
       | {
           duration: number;
-          direction: 'rtl';
           verticalPosition: 'top';
           horizontalPosition: 'right';
         }

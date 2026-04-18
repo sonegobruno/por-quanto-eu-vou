@@ -8,7 +8,6 @@ export class SnackbarService {
   public open(message: string): void {
     this.snackBar.open(message, undefined, {
       duration: 5000,
-      direction: 'rtl',
       verticalPosition: 'top',
       horizontalPosition: 'right',
     });
