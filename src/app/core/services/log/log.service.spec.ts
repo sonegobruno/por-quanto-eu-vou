@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { LogService } from './log.service';
-import { LogConfig, LogConfigToken } from './log-config-token';
+import { LogAdapter, LOG } from './log-adapter';
 
 describe('LogService', () => {
   let service: LogService;
@@ -11,14 +11,14 @@ describe('LogService', () => {
       providers: [
         LogService,
         {
-          provide: LogConfigToken,
+          provide: LOG,
           useValue: {
             info: vi.fn(),
             error: vi.fn(),
             debug: vi.fn(),
             warn: vi.fn(),
             log: vi.fn(),
-          } as LogConfig,
+          } as LogAdapter,
         },
       ],
     });
@@ -30,7 +30,7 @@ describe('LogService', () => {
   });
 
   it('should call all log methods', () => {
-    const logConfig = TestBed.inject(LogConfigToken);
+    const logConfig = TestBed.inject(LOG);
 
     service.info('Info message');
     expect(logConfig.info).toHaveBeenCalledWith('Info message');

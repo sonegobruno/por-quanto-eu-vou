@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { LogConfig, LogConfigToken } from './log-config-token';
+import { LogAdapter, LOG } from './log-adapter';
 
 @Injectable()
-export class LogService implements LogConfig {
-  private logConfig = inject(LogConfigToken);
+export class LogService implements LogAdapter {
+  private logConfig = inject(LOG);
 
   public info(message: string, ...additional: unknown[]): void {
     this.logConfig.info(message, ...additional);
