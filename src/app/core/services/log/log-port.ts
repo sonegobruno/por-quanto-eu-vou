@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
-export type LogAdapter = {
+export type LogPort = {
   info: (message: string, ...additional: unknown[]) => void;
   error: (message: string, ...additional: unknown[]) => void;
   debug: (message: string, ...additional: unknown[]) => void;
@@ -8,4 +8,4 @@ export type LogAdapter = {
   log: (message: string, ...additional: unknown[]) => void;
 };
 
-export const LOG = new InjectionToken<LogAdapter>('LogAdapter');
+export const LOG = new InjectionToken<LogPort>('LogPort');

@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { LogAdapter, LOG } from './log-adapter';
+import { LogPort, LOG } from './log-port';
 
 @Injectable()
-export class LogService implements LogAdapter {
+export class LogService implements LogPort {
   private logConfig = inject(LOG);
 
   public info(message: string, ...additional: unknown[]): void {

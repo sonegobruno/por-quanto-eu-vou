@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { LogService } from './log.service';
-import { LogAdapter, LOG } from './log-adapter';
+import { LogPort, LOG } from './log-port';
 
 describe('LogService', () => {
   let service: LogService;
@@ -18,7 +18,7 @@ describe('LogService', () => {
             debug: vi.fn(),
             warn: vi.fn(),
             log: vi.fn(),
-          } as LogAdapter,
+          } as LogPort,
         },
       ],
     });

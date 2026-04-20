@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
-export type SnackbarAdapter = {
+export type SnackbarPort = {
   open: (
     message: string,
     action?: string | undefined,
@@ -14,4 +14,4 @@ export type SnackbarAdapter = {
   ) => void;
 };
 
-export const SNACKBAR = new InjectionToken<SnackbarAdapter>('SnackbarAdapter');
+export const SNACKBAR = new InjectionToken<SnackbarPort>('SnackbarPort');

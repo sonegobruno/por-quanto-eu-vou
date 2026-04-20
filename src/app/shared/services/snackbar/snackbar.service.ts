@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { SNACKBAR } from './snackbar-adapter';
+import { SNACKBAR } from './snackbar-port';
 
 @Injectable()
 export class SnackbarService {
