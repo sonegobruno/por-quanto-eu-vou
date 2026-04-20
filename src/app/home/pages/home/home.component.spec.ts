@@ -14,7 +14,7 @@ describe('HomeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
-        { provide: SnackbarService, useValue: { open: vi.fn() } as Pick<SnackbarService, 'open'> },
+        { provide: SnackbarService, useValue: { warn: vi.fn() } as Pick<SnackbarService, 'warn'> },
         { provide: LogService, useValue: { warn: vi.fn() } as Pick<LogService, 'warn'> },
       ],
     })
@@ -77,13 +77,13 @@ describe('HomeComponent', () => {
 
     submitForm(null, null, null);
 
-    expect(snackbarService.open).toHaveBeenCalledWith(
+    expect(snackbarService.warn).toHaveBeenCalledWith(
       expect.stringContaining('Distancia é obrigatória')
     );
-    expect(snackbarService.open).toHaveBeenCalledWith(
+    expect(snackbarService.warn).toHaveBeenCalledWith(
       expect.stringContaining('Preço do combustível é obrigatório')
     );
-    expect(snackbarService.open).toHaveBeenCalledWith(
+    expect(snackbarService.warn).toHaveBeenCalledWith(
       expect.stringContaining('Distância por litro é obrigatória')
     );
   });
@@ -92,13 +92,13 @@ describe('HomeComponent', () => {
 
     submitForm(100, null, null);
 
-    expect(snackbarService.open).not.toHaveBeenCalledWith(
+    expect(snackbarService.warn).not.toHaveBeenCalledWith(
       expect.stringContaining('Distancia é obrigatória')
     );
-    expect(snackbarService.open).toHaveBeenCalledWith(
+    expect(snackbarService.warn).toHaveBeenCalledWith(
       expect.stringContaining('Preço do combustível é obrigatório')
     );
-    expect(snackbarService.open).toHaveBeenCalledWith(
+    expect(snackbarService.warn).toHaveBeenCalledWith(
       expect.stringContaining('Distância por litro é obrigatória')
     );
   });
@@ -108,13 +108,13 @@ describe('HomeComponent', () => {
 
     const snackbarService = TestBed.inject(SnackbarService);
 
-    expect(snackbarService.open).not.toHaveBeenCalledWith(
+    expect(snackbarService.warn).not.toHaveBeenCalledWith(
       expect.stringContaining('Distancia é obrigatória')
     );
-    expect(snackbarService.open).not.toHaveBeenCalledWith(
+    expect(snackbarService.warn).not.toHaveBeenCalledWith(
       expect.stringContaining('Preço do combustível é obrigatório')
     );
-    expect(snackbarService.open).toHaveBeenCalledWith(
+    expect(snackbarService.warn).toHaveBeenCalledWith(
       expect.stringContaining('Distância por litro é obrigatória')
     );
   });

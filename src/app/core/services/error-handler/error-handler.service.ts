@@ -9,6 +9,6 @@ export class ErrorHandlerService implements ErrorHandler {
 
   handleError(error: unknown): void {
     this.log.error('Ocorreu um erro inesperado!', error);
-    this.snackBar.open('Ocorreu um erro inesperado!');
+    this.snackBar.error('Ocorreu um erro inesperado!');
   }
 }

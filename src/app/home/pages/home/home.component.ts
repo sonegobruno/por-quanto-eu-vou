@@ -55,7 +55,7 @@ export class HomeComponent {
             .map(error => error.message)
             .join('\n');
 
-          this.snackBarService.open(message);
+          this.snackBarService.warn(message);
 
           this.logService.warn('Formulário inválido', field().errorSummary());
 

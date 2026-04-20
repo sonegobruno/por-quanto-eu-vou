@@ -17,7 +17,7 @@ describe('ErrorHandlerService', () => {
         },
         {
           provide: SnackbarService,
-          useValue: { open: vi.fn() } as Pick<SnackbarService, 'open'>,
+          useValue: { error: vi.fn() } as Pick<SnackbarService, 'error'>,
         },
       ],
     });
@@ -43,6 +43,6 @@ describe('ErrorHandlerService', () => {
 
     service.handleError(testError);
 
-    expect(snackbarService.open).toHaveBeenCalledWith('Ocorreu um erro inesperado!');
+    expect(snackbarService.error).toHaveBeenCalledWith('Ocorreu um erro inesperado!');
   });
 });

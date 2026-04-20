@@ -27,7 +27,7 @@ describe('SnackbarService', () => {
     const snackBar = TestBed.inject(SNACKBAR);
     const message = 'Test message';
 
-    service.open(message);
+    service.warn(message);
 
     expect(snackBar.open).toHaveBeenCalledWith(message, undefined, {
       duration: 5000,
