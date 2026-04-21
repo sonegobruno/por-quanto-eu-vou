@@ -1,18 +1,29 @@
-<form [formRoot]="calculatorForm" data-testid="home-form">
-  <input type="number" data-testid="home-distance" [formField]="calculatorForm.distance" placeholder="Distance">
-  @if(calculatorForm.distance().touched()) {
-    <span>{{ calculatorForm.distance().errors()[0]?.message }}</span>
-  }
-  <input type="checkbox" data-testid="home-is-round-trip" [formField]="calculatorForm.isRoundTrip">
-  <input type="number" data-testid="home-gasoline-price" [formField]="calculatorForm.gasolinePrice" placeholder="Gasoline Price">
-  @if(calculatorForm.gasolinePrice().touched()) {
-    <span>{{ calculatorForm.gasolinePrice().errors()[0]?.message }}</span>
-  }
-  <input type="number" data-testid="home-distance-per-liter" [formField]="calculatorForm.distancePerLiter" placeholder="Distance per Liter">
-  @if(calculatorForm.distancePerLiter().touched()) {
-    <span>{{ calculatorForm.distancePerLiter().errors()[0]?.message }}</span>
-  }
-  <button type="submit" data-testid="home-submit">Calculate Cost</button>
+<form class="home__form" [formRoot]="calculatorForm" data-testid="home-form">
+  <mat-form-field>
+    <input type="number" matInput  data-testid="home-distance" [formField]="calculatorForm.distance" placeholder="Distance">
+    @if(calculatorForm.distance().touched()) {
+      <mat-error>{{ calculatorForm.distance().errors()[0]?.message }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-checkbox  data-testid="home-is-round-trip" [formField]="calculatorForm.isRoundTrip">
+    </mat-checkbox>
+
+  <mat-form-field>
+    <input type="number" matInput  data-testid="home-gasoline-price" [formField]="calculatorForm.gasolinePrice" placeholder="Gasoline Price">
+    @if(calculatorForm.gasolinePrice().touched()) {
+      <mat-error>{{ calculatorForm.gasolinePrice().errors()[0]?.message }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <input type="number" matInput  data-testid="home-distance-per-liter" [formField]="calculatorForm.distancePerLiter" placeholder="Distance per Liter">
+    @if(calculatorForm.distancePerLiter().touched()) {
+      <mat-error>{{ calculatorForm.distancePerLiter().errors()[0]?.message }}</mat-error>
+    }
+  </mat-form-field>
+
+  <button matButton="filled" type="submit" data-testid="home-submit">Calculate Cost</button>
 </form>
 
 <strong data-testid="home-result">Resultado: {{ result() }}</strong>

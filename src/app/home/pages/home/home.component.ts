@@ -4,10 +4,21 @@ import { signal } from '@angular/core';
 import { form, FormField, FormRoot } from '@angular/forms/signals';
 import { FormService } from '@app/shared/services/form/form.service';
 import { CalculatorForm, calculatorFormSchema } from '@app/home/form/calculator-form';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'pqev-home',
-  imports: [FormField, FormRoot],
+  imports: [
+    FormField,
+    FormRoot,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatButtonModule,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
