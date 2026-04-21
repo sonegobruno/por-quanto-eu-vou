@@ -13,6 +13,7 @@ import { ErrorHandlerService } from './core/services/error-handler/error-handler
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { snackbarServiceProvider } from './shared/services/snackbar/provider-snackbar';
+import { FormService } from './shared/services/form/form.service';
 
 registerLocaleData(localePt);
 
@@ -26,5 +27,6 @@ export const appConfig: ApplicationConfig = {
     DatePipe,
     { provide: LOCALE_ID, useValue: 'pt' },
     ...snackbarServiceProvider,
+    FormService,
   ],
 };

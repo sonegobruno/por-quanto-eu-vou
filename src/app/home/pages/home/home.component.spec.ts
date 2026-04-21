@@ -2,9 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeComponent } from './home.component';
 import { By } from '@angular/platform-browser';
-import { SnackbarService } from '@app/shared/services/snackbar/snackbar.service';
-import { LogService } from '@app/core/services/log/log.service';
 import { GasolineCalculatorService } from '@app/home/services/gasoline-calculator/gasoline-calculator.service';
+import { FormService } from '@app/shared/services/form/form.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -14,8 +13,10 @@ describe('HomeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
-        { provide: SnackbarService, useValue: { warn: vi.fn() } as Pick<SnackbarService, 'warn'> },
-        { provide: LogService, useValue: { warn: vi.fn() } as Pick<LogService, 'warn'> },
+        {
+          provide: FormService,
+          useValue: { handleError: vi.fn() } as Pick<FormService, 'handleError'>,
+        },
       ],
     })
       .overrideComponent(HomeComponent, {
@@ -72,50 +73,46 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call snackbar warning if distance is invalid', () => {
-    const snackbarService = TestBed.inject(SnackbarService);
+  it('should call formService handleErrors if fields has required error', () => {
+    const formService = TestBed.inject(FormService);
 
     submitForm(null, null, null);
 
-    expect(snackbarService.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Distancia é obrigatória')
-    );
-    expect(snackbarService.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Preço do combustível é obrigatório')
-    );
-    expect(snackbarService.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Distância por litro é obrigatória')
+    expect(formService.handleError).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ message: 'Distância é obrigatória' }),
+        expect.objectContaining({ message: 'Preço do combustível é obrigatório' }),
+        expect.objectContaining({ message: 'Distância por litro é obrigatória' }),
+      ])
     );
   });
-  it('should call snackbar warning if gasoline price is invalid', () => {
-    const snackbarService = TestBed.inject(SnackbarService);
+  it('should call formService handleErrors if field has min error', () => {
+    const formService = TestBed.inject(FormService);
 
-    submitForm(100, null, null);
+    submitForm(1, 1, 1);
 
-    expect(snackbarService.warn).not.toHaveBeenCalledWith(
-      expect.stringContaining('Distancia é obrigatória')
-    );
-    expect(snackbarService.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Preço do combustível é obrigatório')
-    );
-    expect(snackbarService.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Distância por litro é obrigatória')
+    expect(formService.handleError).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ message: 'Distância precisa ser maior que 1' }),
+        expect.objectContaining({ message: 'Preço do combustível precisa ser maior que 1' }),
+        expect.objectContaining({ message: 'Distância por litro precisa ser maior que 1' }),
+      ])
     );
   });
 
-  it('should call snackbar warning if distance per liter is invalid', () => {
-    submitForm(100, 6.5, null);
+  it('should call formService handleErrors if field has max error', () => {
+    const formService = TestBed.inject(FormService);
 
-    const snackbarService = TestBed.inject(SnackbarService);
+    submitForm(1000000, 100, 100);
 
-    expect(snackbarService.warn).not.toHaveBeenCalledWith(
-      expect.stringContaining('Distancia é obrigatória')
-    );
-    expect(snackbarService.warn).not.toHaveBeenCalledWith(
-      expect.stringContaining('Preço do combustível é obrigatório')
-    );
-    expect(snackbarService.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Distância por litro é obrigatória')
+    expect(formService.handleError).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ message: 'Distância precisa ser menor que 1 milhão' }),
+        expect.objectContaining({
+          message: 'Preço do combustível precisa ser menor que R$ 100,00',
+        }),
+        expect.objectContaining({ message: 'Distância por litro precisa ser menor que 100 Km/L' }),
+      ])
     );
   });
 
