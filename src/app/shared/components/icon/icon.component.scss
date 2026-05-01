@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+.icon {
+  &__icon {
+    font-size: inherit;
+  }
+}

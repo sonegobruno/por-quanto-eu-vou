@@ -1,14 +1,10 @@
 <div class="home__container p-8">
   <div class="flex">
     <h1 class="home__title">
-      <span class="material-symbols-outlined">
-      calculate
-      </span>
+      <pqev-icon icon="calculate" />
       Calculadora de Viagem
     </h1>
-    <span class="material-symbols-outlined home__icon">
-      local_gas_station
-    </span>
+    <pqev-icon icon="local_gas_station" class="home__icon" />
   </div>
   <form class="home__form mt-4" [formRoot]="calculatorForm" data-testid="home-form">
     <mat-form-field class="mt-3">

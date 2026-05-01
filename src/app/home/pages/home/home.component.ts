@@ -15,6 +15,7 @@ import {
   LAST_GASOLINE_PRICE_COOKIE_NAME,
 } from '@app/home/constants/last-usage-cookie-name';
 import { isValidNumber, toNumber } from '@app/shared/utils/number';
+import { IconComponent } from '@app/shared/components/icon/icon.component';
 
 @Component({
   selector: 'pqev-home',
@@ -26,6 +27,7 @@ import { isValidNumber, toNumber } from '@app/shared/utils/number';
     MatCheckboxModule,
     MatButtonModule,
     CurrencyPipe,
+    IconComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
