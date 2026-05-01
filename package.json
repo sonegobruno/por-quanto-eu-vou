@@ -12,7 +12,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,scss,json}\"",
     "test": "ng test --watch=false",
     "test:watch": "ng test",
-    "test:coverage": "ng test --coverage",
+    "test:coverage": "ng test --watch=false --coverage",
     "prepare": "husky",
     "commit": "cz"
   },
