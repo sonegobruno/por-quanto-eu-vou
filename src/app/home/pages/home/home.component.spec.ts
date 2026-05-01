@@ -153,6 +153,24 @@ describe('HomeComponent', () => {
 
     expect(
       fixture.debugElement.query(By.css('[data-testid="home-result"]')).nativeElement.textContent
-    ).toContain('68.21');
+    ).toBe('R$68.21');
+  });
+
+  it('should reset result to 0 after submitting invalid form', () => {
+    const gasolineCalculatorService = fixture.debugElement.injector.get(
+      GasolineCalculatorService
+    ) as any; // TODO: add correct type
+    gasolineCalculatorService.calculate.mockReturnValue(68.21);
+
+    submitForm(100, 6.5, 10);
+    fixture.detectChanges();
+
+    const result = fixture.debugElement.query(By.css('[data-testid="home-result"]'));
+    expect(result.nativeElement.textContent).toContain('R$68.21');
+
+    submitForm(null, null, null);
+    fixture.detectChanges();
+
+    expect(result.nativeElement.textContent).toContain('R$0.00');
   });
 });

@@ -52,6 +52,7 @@ export class HomeComponent {
         this.result.set(calcResult);
       },
       onInvalid: field => {
+        this.result.set(0);
         this.formService.handleError(field().errorSummary());
       },
     },
