@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'pqev-home',
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatCheckboxModule,
     MatButtonModule,
+    CurrencyPipe,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -55,5 +57,5 @@ export class HomeComponent {
     },
   });
 
-  protected result = signal<number | null>(null);
+  protected result = signal<number>(0);
 }

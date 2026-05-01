@@ -1,30 +1,50 @@
-<form class="home__form" [formRoot]="calculatorForm" data-testid="home-form">
-  <mat-form-field>
-    <input type="number" matInput  data-testid="home-distance" [formField]="calculatorForm.distance" placeholder="Distance">
-    @if(calculatorForm.distance().touched()) {
-      <mat-error>{{ calculatorForm.distance().errors()[0]?.message }}</mat-error>
-    }
-  </mat-form-field>
+<div class="home__container p-8">
+  <div class="flex">
+    <h1 class="home__title">
+      <span class="material-symbols-outlined">
+      calculate
+      </span>
+      Calculadora de Viagem
+    </h1>
+    <span class="material-symbols-outlined home__icon">
+      local_gas_station
+    </span>
+  </div>
+  <form class="home__form mt-4" [formRoot]="calculatorForm" data-testid="home-form">
+    <mat-form-field class="mt-3">
+      <mat-label>Distância (Km)</mat-label>
+      <input type="number" matInput  data-testid="home-distance" [formField]="calculatorForm.distance" placeholder="Digite a distância (Km)">
+      @if(calculatorForm.distance().touched()) {
+        <mat-error>{{ calculatorForm.distance().errors()[0]?.message }}</mat-error>
+      }
+    </mat-form-field>
 
-  <mat-checkbox  data-testid="home-is-round-trip" [formField]="calculatorForm.isRoundTrip">
+    <mat-checkbox  data-testid="home-is-round-trip" [formField]="calculatorForm.isRoundTrip">
+      Incluir volta (Ida e Volta)
     </mat-checkbox>
 
-  <mat-form-field>
-    <input type="number" matInput  data-testid="home-gasoline-price" [formField]="calculatorForm.gasolinePrice" placeholder="Gasoline Price">
-    @if(calculatorForm.gasolinePrice().touched()) {
-      <mat-error>{{ calculatorForm.gasolinePrice().errors()[0]?.message }}</mat-error>
-    }
-  </mat-form-field>
+    <mat-form-field class="mt-3">
+      <mat-label>Preço do combustível</mat-label>
+      <input type="number" matInput  data-testid="home-gasoline-price" [formField]="calculatorForm.gasolinePrice" placeholder="Digite o preço do combustível">
+      @if(calculatorForm.gasolinePrice().touched()) {
+        <mat-error>{{ calculatorForm.gasolinePrice().errors()[0]?.message }}</mat-error>
+      }
+    </mat-form-field>
 
-  <mat-form-field>
-    <input type="number" matInput  data-testid="home-distance-per-liter" [formField]="calculatorForm.distancePerLiter" placeholder="Distance per Liter">
-    @if(calculatorForm.distancePerLiter().touched()) {
-      <mat-error>{{ calculatorForm.distancePerLiter().errors()[0]?.message }}</mat-error>
-    }
-  </mat-form-field>
+    <mat-form-field class="mt-3">
+      <mat-label>Consumo (Km/L)</mat-label>
+      <input type="number" matInput   data-testid="home-distance-per-liter" [formField]="calculatorForm.distancePerLiter" placeholder="Digite o consumo (Km/L)">
+      @if(calculatorForm.distancePerLiter().touched()) {
+        <mat-error>{{ calculatorForm.distancePerLiter().errors()[0]?.message }}</mat-error>
+      }
+    </mat-form-field>
 
-  <button matButton="filled" type="submit" data-testid="home-submit">Calculate Cost</button>
-</form>
+    <button matButton="filled" type="submit" data-testid="home-submit">Calcular trajeto</button>
+  </form>
 
-<strong data-testid="home-result">Resultado: {{ result() }}</strong>
-
+  <div class="home__result mt-4">
+    <h2 class="home__result-title">Custo estimado</h2>
+    <strong data-testid="home-result" class="home__result-value mt-3">{{ result() | currency:'BRL'}}</strong>
+    <p class="home__result-sub-title mt-3">Os valores podem variar conforme o trânsito e condução.</p>
+  </div>
+</div>

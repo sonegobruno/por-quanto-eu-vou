@@ -1,2 +1,39 @@
 @use 'reset';
 @use 'material';
+@use 'theme';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-neutral-9);
+  color: var(--color-neutral-1);
+  font: var(--mat-sys-body-medium);
+}
+
+html {
+  font-size: 100%; /* 16px — desktop */
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 93.75%; /* 15px — tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 87.5%; /* 14px — mobile grande */
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 81.25%; /* 13px — mobile pequeno */
+  }
+}
+
+.flex {
+  display: flex;
+}

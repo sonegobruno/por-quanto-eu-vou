@@ -14,6 +14,7 @@ import { DatePipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { snackbarServiceProvider } from './shared/services/snackbar/provider-snackbar';
 import { FormService } from './shared/services/form/form.service';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 registerLocaleData(localePt);
 
@@ -28,5 +29,9 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'pt' },
     ...snackbarServiceProvider,
     FormService,
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { floatLabel: 'always', appearance: 'outline' },
+    },
   ],
 };
