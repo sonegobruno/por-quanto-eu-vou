@@ -4,6 +4,7 @@ import {
   isLessThan,
   isLessThanOrEqual,
   isValidNumber,
+  toNumber,
 } from './number';
 
 describe('isValidNumber', () => {
@@ -72,5 +73,26 @@ describe('isGreaterThanOrEqual', () => {
   it('should return false if input is less than the specified value', () => {
     expect(isGreaterThanOrEqual(5, 10)).toBe(false);
     expect(isGreaterThanOrEqual(-1, 0)).toBe(false);
+  });
+});
+
+describe('toNumber', () => {
+  it('should convert valid number strings to numbers', () => {
+    expect(toNumber('3.14')).toBe(3.14);
+    expect(toNumber('0')).toBe(0);
+    expect(toNumber('-1')).toBe(-1);
+  });
+
+  it('should return NaN for invalid number strings', () => {
+    expect(toNumber('abc')).toBeNaN();
+    expect(toNumber('')).toBeNaN();
+    expect(toNumber(' ')).toBeNaN();
+  });
+
+  it('should return NaN for non-string, non-number inputs', () => {
+    expect(toNumber(null)).toBeNaN();
+    expect(toNumber(undefined)).toBeNaN();
+    expect(toNumber({})).toBeNaN();
+    expect(toNumber([])).toBeNaN();
   });
 });

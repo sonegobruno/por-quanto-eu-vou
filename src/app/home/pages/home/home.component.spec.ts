@@ -4,6 +4,11 @@ import { HomeComponent } from './home.component';
 import { By } from '@angular/platform-browser';
 import { GasolineCalculatorService } from '@app/home/services/gasoline-calculator/gasoline-calculator.service';
 import { FormService } from '@app/shared/services/form/form.service';
+import { COOKIE, CookiePort } from '@app/shared/services/cookie/cookie-port';
+import {
+  LAST_DISTANCE_PER_LITER_COOKIE_NAME,
+  LAST_GASOLINE_PRICE_COOKIE_NAME,
+} from '@app/home/constants/last-usage-cookie-name';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -16,6 +21,13 @@ describe('HomeComponent', () => {
         {
           provide: FormService,
           useValue: { handleError: vi.fn() } as Pick<FormService, 'handleError'>,
+        },
+        {
+          provide: COOKIE,
+          useValue: {
+            get: vi.fn(),
+            set: vi.fn(),
+          } as Pick<CookiePort, 'get' | 'set'>,
         },
       ],
     })
@@ -172,5 +184,51 @@ describe('HomeComponent', () => {
     fixture.detectChanges();
 
     expect(result.nativeElement.textContent).toContain('R$0.00');
+  });
+
+  it('should set cookies with last valid form values', () => {
+    const expectedGasolinePrice = 6.5;
+    const expectedDistancePerLiter = 10;
+    const cookieService = TestBed.inject(COOKIE);
+
+    submitForm(100, expectedGasolinePrice, expectedDistancePerLiter, true);
+
+    expect(cookieService.set).toHaveBeenCalledWith(
+      LAST_GASOLINE_PRICE_COOKIE_NAME,
+      expectedGasolinePrice.toString()
+    );
+    expect(cookieService.set).toHaveBeenCalledWith(
+      LAST_DISTANCE_PER_LITER_COOKIE_NAME,
+      expectedDistancePerLiter.toString()
+    );
+  });
+
+  it('should get last valid form values from cookies on init', () => {
+    const expectedGasolinePrice = '6.5';
+    const expectedDistancePerLiter = '10';
+    const cookieService = TestBed.inject(COOKIE) as any; // TODO: add correct type
+
+    cookieService.get.mockImplementation((name: string) => {
+      if (name === LAST_GASOLINE_PRICE_COOKIE_NAME) {
+        return expectedGasolinePrice;
+      }
+      if (name === LAST_DISTANCE_PER_LITER_COOKIE_NAME) {
+        return expectedDistancePerLiter;
+      }
+      return null;
+    });
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    const inputGasolinePrice = fixture.debugElement.query(
+      By.css('[data-testid="home-gasoline-price"]')
+    );
+    const inputDistancePerLiter = fixture.debugElement.query(
+      By.css('[data-testid="home-distance-per-liter"]')
+    );
+
+    expect(inputGasolinePrice.nativeElement.value).toBe(expectedGasolinePrice);
+    expect(inputDistancePerLiter.nativeElement.value).toBe(expectedDistancePerLiter);
   });
 });

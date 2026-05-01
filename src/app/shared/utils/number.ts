@@ -21,3 +21,18 @@ export const isGreaterThan = (input: number, greaterThan: number): boolean => {
 export const isGreaterThanOrEqual = (input: number, greaterThan: number): boolean => {
   return input >= greaterThan;
 };
+
+export const toNumber = (input: unknown): number => {
+  if (typeof input === 'number') {
+    return input;
+  }
+
+  if (typeof input === 'string') {
+    const parsed = parseFloat(input);
+    if (!isNaN(parsed) && isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  return NaN;
+};

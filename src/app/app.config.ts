@@ -15,6 +15,7 @@ import localePt from '@angular/common/locales/pt';
 import { snackbarServiceProvider } from './shared/services/snackbar/provider-snackbar';
 import { FormService } from './shared/services/form/form.service';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { cookieServiceProvider } from './shared/services/cookie/provider-cookie';
 
 registerLocaleData(localePt);
 
@@ -33,5 +34,6 @@ export const appConfig: ApplicationConfig = {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { floatLabel: 'always', appearance: 'outline' },
     },
+    ...cookieServiceProvider,
   ],
 };
