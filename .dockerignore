@@ -1,0 +1,33 @@
+# Dependências
+node_modules/
+
+# Build anterior
+dist/
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+
+# Ambiente local
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# Testes
+coverage/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db

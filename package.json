@@ -13,7 +13,7 @@
     "test": "ng test --watch=false",
     "test:watch": "ng test",
     "test:coverage": "ng test --watch=false --coverage",
-    "prepare": "husky",
+    "prepare": "husky || true",
     "commit": "cz"
   },
   "lint-staged": {

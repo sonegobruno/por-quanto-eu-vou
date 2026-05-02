@@ -2,9 +2,9 @@ name: CI — Testes Unitários
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
   test:
@@ -22,7 +22,7 @@ jobs:
           cache: 'npm'
 
       - name: Instalar dependências
-        run: npm ci
+        run: HUSKY=0 npm ci --ignore-scripts
 
       - name: Rodar testes unitários (headless)
         run: npm run test:coverage
@@ -34,3 +34,48 @@ jobs:
           name: coverage-report
           path: coverage/
           retention-days: 7
+
+  deploy:
+    name: Build & Push Docker Hub
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pegar versão do package.json
+        id: version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Build e Push SSR
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: ssr
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/por-quanto-eu-vou-ssr:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/por-quanto-eu-vou-ssr:${{ steps.version.outputs.VERSION }}
+
+      - name: Build e Push Nginx
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: nginx
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/por-quanto-eu-vou-nginx:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/por-quanto-eu-vou-nginx:${{ steps.version.outputs.VERSION }}

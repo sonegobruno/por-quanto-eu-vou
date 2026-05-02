@@ -1,0 +1,24 @@
+services:
+  ssr:
+    image: sonegobruno/por-quanto-eu-vou-ssr:latest
+    container_name: angular-ssr
+    restart: unless-stopped
+    expose:
+      - '4000'
+    networks:
+      - angular-net
+
+  nginx:
+    image: sonegobruno/por-quanto-eu-vou-nginx:latest
+    container_name: angular-nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    depends_on:
+      - ssr
+    networks:
+      - angular-net
+
+networks:
+  angular-net:
+    driver: bridge
