@@ -1,0 +1,9 @@
+  <header class="pqev-header__container">
+    <img src="/logo.svg" alt="Logo Por Quanto Eu Vou">
+    <button matIconButton (click)="themeService.toggleTheme()"  matTooltip="Alterar tema">
+      <pqev-icon
+        class="pqev-header__theme-icone"
+        [icon]="themeService.isLightMode() ? 'dark_mode' : 'light_mode'"
+      ></pqev-icon>
+    </button>
+  </header>

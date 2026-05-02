@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-type Icon = 'calculate' | 'local_gas_station';
+type Icon = 'calculate' | 'local_gas_station' | 'dark_mode' | 'light_mode';
 
 @Component({
   selector: 'pqev-icon',

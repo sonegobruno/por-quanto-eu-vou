@@ -64,6 +64,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: infra/prod/Dockerfile
           target: ssr
           push: true
           tags: |
@@ -74,6 +75,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: infra/prod/Dockerfile
           target: nginx
           push: true
           tags: |

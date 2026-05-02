@@ -13,7 +13,7 @@ RUN npm run build
 FROM nginx:alpine AS nginx
 
 COPY --from=builder /app/dist/por-quanto-eu-vou/browser /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY infra/prod/nginx.conf /etc/nginx/conf.d/default.conf
 
 # ─── Stage 3: Node SSR ────────────────────────────────────────
 FROM node:22-alpine AS ssr

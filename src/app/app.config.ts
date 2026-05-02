@@ -16,6 +16,7 @@ import { snackbarServiceProvider } from './shared/services/snackbar/provider-sna
 import { FormService } from './shared/services/form/form.service';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { cookieServiceProvider } from './shared/services/cookie/provider-cookie';
+import { ThemeService } from './shared/services/theme/theme.service';
 
 registerLocaleData(localePt);
 
@@ -35,5 +36,6 @@ export const appConfig: ApplicationConfig = {
       useValue: { floatLabel: 'always', appearance: 'outline' },
     },
     ...cookieServiceProvider,
+    ThemeService,
   ],
 };
