@@ -1,6 +1,6 @@
 {
   "name": "por-quanto-eu-vou",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -14,7 +14,8 @@
     "test:watch": "ng test",
     "test:coverage": "ng test --watch=false --coverage",
     "prepare": "husky || true",
-    "commit": "cz"
+    "commit": "cz",
+    "release": "bash scripts/version-bump.sh"
   },
   "lint-staged": {
     "src/**/*.ts": [
