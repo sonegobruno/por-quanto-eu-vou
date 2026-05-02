@@ -3,6 +3,8 @@
 
 @use 'sass:map';
 @use '@angular/material' as mat;
+@use 'button-material';
+@use 'form-field-material';
 
 // Note: Color palettes are generated from primary: #0052FF, secondary: #059669, tertiary: #F59E0B, neutral: #0F172A, neutral variant: #757682, error: #ef4444
 $_palettes: (
