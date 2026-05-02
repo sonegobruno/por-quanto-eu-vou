@@ -90,6 +90,9 @@
               "buildTarget": "por-quanto-eu-vou:build:development"
             }
           },
+          "options": {
+            "hmr": false
+          },
           "defaultConfiguration": "development"
         },
         "test": {
