@@ -55,7 +55,7 @@
     "@types/express": "^5.0.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.19.39",
-    "@vitest/coverage-v8": "^4.1.4",
+    "@vitest/coverage-v8": "^4.1.6",
     "angular-eslint": "21.3.1",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
@@ -69,7 +69,8 @@
     "prettier": "^3.8.2",
     "ts-jest": "^29.4.9",
     "typescript": "~5.9.2",
-    "typescript-eslint": "8.56.1"
+    "typescript-eslint": "8.56.1",
+    "vitest": "^4.1.6"
   },
   "config": {
     "commitizen": {
