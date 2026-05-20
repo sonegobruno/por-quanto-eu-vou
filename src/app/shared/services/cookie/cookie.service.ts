@@ -1,11 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { CookiePort } from './cookie-port';
 import { CookieService as NgxCookieService } from 'ngx-cookie-service';
-import { addMonths } from 'date-fns';
-import { now } from '@app/shared/utils/date/date-utils';
+import { addMonths, now } from '@app/shared/utils/date/date-utils';
 
 @Injectable()
-export class CookieService implements CookiePort {
+export class CookieService {
   private readonly cookie = inject(NgxCookieService);
 
   get(name: string): string {

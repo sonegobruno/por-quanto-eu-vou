@@ -9,13 +9,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { CurrencyPipe } from '@angular/common';
-import { COOKIE } from '@app/shared/services/cookie/cookie-port';
 import {
   LAST_DISTANCE_PER_LITER_COOKIE_NAME,
   LAST_GASOLINE_PRICE_COOKIE_NAME,
 } from '@app/home/constants/last-usage-cookie-name';
 import { isValidNumber, toNumber } from '@app/shared/utils/number';
 import { IconComponent } from '@app/shared/components/icon/icon.component';
+import { CookieService } from '@app/shared/services/cookie/cookie.service';
 
 @Component({
   selector: 'pqev-home',
@@ -37,7 +37,7 @@ import { IconComponent } from '@app/shared/components/icon/icon.component';
 export class HomeComponent implements OnInit {
   private readonly gasolineCalculatorService = inject(GasolineCalculatorService);
   private readonly formService = inject(FormService);
-  private readonly cookie = inject(COOKIE);
+  private readonly cookie = inject(CookieService);
 
   private calculator = signal<CalculatorForm>({
     distance: NaN,
