@@ -1,8 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
 import { DestroyRef, inject, Injectable, PLATFORM_ID, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-import { COOKIE } from '../cookie/cookie-port';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { CookieService } from '../cookie/cookie.service';
 
 const themes = ['light', 'dark'] as const;
 
@@ -14,7 +14,7 @@ const DEFAULT_THEME: Theme = 'light';
 export class ThemeService {
   private readonly platformId = inject(PLATFORM_ID);
 
-  private readonly cookieService = inject(COOKIE);
+  private readonly cookieService = inject(CookieService);
 
   private readonly destroyRef = inject(DestroyRef);
 

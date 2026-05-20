@@ -4,11 +4,11 @@ import { HomeComponent } from './home.component';
 import { By } from '@angular/platform-browser';
 import { GasolineCalculatorService } from '@app/home/services/gasoline-calculator/gasoline-calculator.service';
 import { FormService } from '@app/shared/services/form/form.service';
-import { COOKIE, CookiePort } from '@app/shared/services/cookie/cookie-port';
 import {
   LAST_DISTANCE_PER_LITER_COOKIE_NAME,
   LAST_GASOLINE_PRICE_COOKIE_NAME,
 } from '@app/home/constants/last-usage-cookie-name';
+import { CookieService } from '@app/shared/services/cookie/cookie.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -23,11 +23,11 @@ describe('HomeComponent', () => {
           useValue: { handleError: vi.fn() } as Pick<FormService, 'handleError'>,
         },
         {
-          provide: COOKIE,
+          provide: CookieService,
           useValue: {
             get: vi.fn(),
             set: vi.fn(),
-          } as Pick<CookiePort, 'get' | 'set'>,
+          } as Pick<CookieService, 'get' | 'set'>,
         },
       ],
     })
@@ -189,7 +189,7 @@ describe('HomeComponent', () => {
   it('should set cookies with last valid form values', () => {
     const expectedGasolinePrice = 6.5;
     const expectedDistancePerLiter = 10;
-    const cookieService = TestBed.inject(COOKIE);
+    const cookieService = TestBed.inject(CookieService);
 
     submitForm(100, expectedGasolinePrice, expectedDistancePerLiter, true);
 
@@ -206,7 +206,7 @@ describe('HomeComponent', () => {
   it('should get last valid form values from cookies on init', () => {
     const expectedGasolinePrice = '6.5';
     const expectedDistancePerLiter = '10';
-    const cookieService = TestBed.inject(COOKIE) as any; // TODO: add correct type
+    const cookieService = TestBed.inject(CookieService) as any; // TODO: add correct type
 
     cookieService.get.mockImplementation((name: string) => {
       if (name === LAST_GASOLINE_PRICE_COOKIE_NAME) {

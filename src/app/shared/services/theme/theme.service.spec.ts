@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ThemeService } from './theme.service';
-import { COOKIE, CookiePort } from '../cookie/cookie-port';
+import { CookieService } from '../cookie/cookie.service';
 
 describe('ThemeService', () => {
   let service: ThemeService;
@@ -11,11 +11,11 @@ describe('ThemeService', () => {
       providers: [
         ThemeService,
         {
-          provide: COOKIE,
+          provide: CookieService,
           useValue: {
             get: vi.fn(),
             set: vi.fn(),
-          } as Pick<CookiePort, 'get' | 'set'>,
+          } as Pick<CookieService, 'get' | 'set'>,
         },
       ],
     });
