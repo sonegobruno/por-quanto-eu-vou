@@ -2,7 +2,6 @@ import { EnvironmentProviders, importProvidersFrom, Provider } from '@angular/co
 import { LoggerModule, NGXLogger } from 'ngx-logger';
 import { environment } from 'src/environments/environment';
 import { LogService } from './log.service';
-import { LOG } from './log-port';
 
 export const logProviders: (Provider | EnvironmentProviders)[] = [
   LogService,
@@ -14,5 +13,5 @@ export const logProviders: (Provider | EnvironmentProviders)[] = [
       timestampFormat: 'short',
     })
   ),
-  { provide: LOG, useClass: NGXLogger },
+  NGXLogger,
 ];

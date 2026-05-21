@@ -1,7 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { LogService } from './log.service';
-import { LogPort, LOG } from './log-port';
+import { NGXLogger } from 'ngx-logger';
+
+class NGXLoggerMock {
+  info = vi.fn();
+  error = vi.fn();
+  debug = vi.fn();
+  warn = vi.fn();
+  log = vi.fn();
+}
 
 describe('LogService', () => {
   let service: LogService;
@@ -10,15 +18,10 @@ describe('LogService', () => {
     TestBed.configureTestingModule({
       providers: [
         LogService,
+        NGXLoggerMock,
         {
-          provide: LOG,
-          useValue: {
-            info: vi.fn(),
-            error: vi.fn(),
-            debug: vi.fn(),
-            warn: vi.fn(),
-            log: vi.fn(),
-          } as LogPort,
+          provide: NGXLogger,
+          useExisting: NGXLoggerMock,
         },
       ],
     });
@@ -30,7 +33,7 @@ describe('LogService', () => {
   });
 
   it('should call all log methods', () => {
-    const logConfig = TestBed.inject(LOG);
+    const logConfig = TestBed.inject(NGXLoggerMock);
 
     service.info('Info message');
     expect(logConfig.info).toHaveBeenCalledWith('Info message');
