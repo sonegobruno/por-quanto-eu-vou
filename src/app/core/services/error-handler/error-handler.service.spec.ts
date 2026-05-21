@@ -2,7 +2,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { ErrorHandlerService } from './error-handler.service';
 import { LogService } from '../log/log.service';
+import { LogMockService } from '../log/log-mock.service';
 import { SnackbarService } from '@app/shared/services/snackbar/snackbar.service';
+import { SnackbarMockService } from '@app/shared/services/snackbar/snackbar-mock.service';
 
 describe('ErrorHandlerService', () => {
   let service: ErrorHandlerService;
@@ -11,13 +13,15 @@ describe('ErrorHandlerService', () => {
     TestBed.configureTestingModule({
       providers: [
         ErrorHandlerService,
+        LogMockService,
+        SnackbarMockService,
         {
           provide: LogService,
-          useValue: { error: vi.fn() } as Pick<LogService, 'error'>,
+          useExisting: LogMockService,
         },
         {
           provide: SnackbarService,
-          useValue: { error: vi.fn() } as Pick<SnackbarService, 'error'>,
+          useExisting: SnackbarMockService,
         },
       ],
     });
@@ -29,7 +33,7 @@ describe('ErrorHandlerService', () => {
   });
 
   it('should log error when handleError is called', () => {
-    const logService = TestBed.inject(LogService);
+    const logService = TestBed.inject(LogMockService);
     const testError = new Error('Test error');
 
     service.handleError(testError);
@@ -38,7 +42,7 @@ describe('ErrorHandlerService', () => {
   });
 
   it('should show snackbar when handleError is called', () => {
-    const snackbarService = TestBed.inject(SnackbarService);
+    const snackbarService = TestBed.inject(SnackbarMockService);
     const testError = new Error('Test error');
 
     service.handleError(testError);

@@ -3,12 +3,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { By } from '@angular/platform-browser';
 import { GasolineCalculatorService } from '@app/home/services/gasoline-calculator/gasoline-calculator.service';
+import { GasolineCalculatorMockService } from '@app/home/services/gasoline-calculator/gasoline-calculator-mock.service';
 import { FormService } from '@app/shared/services/form/form.service';
+import { FormMockService } from '@app/shared/services/form/form-mock.service';
 import {
   LAST_DISTANCE_PER_LITER_COOKIE_NAME,
   LAST_GASOLINE_PRICE_COOKIE_NAME,
 } from '@app/home/constants/last-usage-cookie-name';
 import { CookieService } from '@app/shared/services/cookie/cookie.service';
+import { CookieMockService } from '@app/shared/services/cookie/cookie-mock.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -18,17 +21,17 @@ describe('HomeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
+        FormMockService,
         {
           provide: FormService,
-          useValue: { handleError: vi.fn() } as Pick<FormService, 'handleError'>,
+          useExisting: FormMockService,
         },
+        CookieMockService,
         {
           provide: CookieService,
-          useValue: {
-            get: vi.fn(),
-            set: vi.fn(),
-          } as Pick<CookieService, 'get' | 'set'>,
+          useExisting: CookieMockService,
         },
+        GasolineCalculatorMockService,
       ],
     })
       .overrideComponent(HomeComponent, {
@@ -36,7 +39,7 @@ describe('HomeComponent', () => {
           providers: [
             {
               provide: GasolineCalculatorService,
-              useValue: { calculate: vi.fn() } as Pick<GasolineCalculatorService, 'calculate'>,
+              useExisting: GasolineCalculatorMockService,
             },
           ],
         },
@@ -86,7 +89,7 @@ describe('HomeComponent', () => {
   });
 
   it('should call formService handleErrors if fields has required error', () => {
-    const formService = TestBed.inject(FormService);
+    const formService = TestBed.inject(FormMockService);
 
     submitForm(null, null, null);
 
@@ -99,7 +102,7 @@ describe('HomeComponent', () => {
     );
   });
   it('should call formService handleErrors if field has min error', () => {
-    const formService = TestBed.inject(FormService);
+    const formService = TestBed.inject(FormMockService);
 
     submitForm(1, 1, 1);
 
@@ -113,7 +116,7 @@ describe('HomeComponent', () => {
   });
 
   it('should call formService handleErrors if field has max error', () => {
-    const formService = TestBed.inject(FormService);
+    const formService = TestBed.inject(FormMockService);
 
     submitForm(1000000, 100, 100);
 
@@ -129,7 +132,9 @@ describe('HomeComponent', () => {
   });
 
   it('should call calculation if form is valid', () => {
-    const gasolineCalculatorService = fixture.debugElement.injector.get(GasolineCalculatorService);
+    const gasolineCalculatorService = fixture.debugElement.injector.get(
+      GasolineCalculatorMockService
+    );
     submitForm(100, 6.5, 10);
 
     expect(gasolineCalculatorService.calculate).toHaveBeenCalledWith({
@@ -142,7 +147,9 @@ describe('HomeComponent', () => {
 
   // TODO: fix round trip
   it.skip('should reflect isRoundTrip value', () => {
-    const gasolineCalculatorService = fixture.debugElement.injector.get(GasolineCalculatorService);
+    const gasolineCalculatorService = fixture.debugElement.injector.get(
+      GasolineCalculatorMockService
+    );
     submitForm(100, 6.5, 10, true);
 
     expect(gasolineCalculatorService.calculate).toHaveBeenCalledWith({
@@ -155,8 +162,8 @@ describe('HomeComponent', () => {
 
   it('should reflect calculation result in the view', () => {
     const gasolineCalculatorService = fixture.debugElement.injector.get(
-      GasolineCalculatorService
-    ) as any; // TODO: add correct type
+      GasolineCalculatorMockService
+    );
     gasolineCalculatorService.calculate.mockReturnValue(68.21);
 
     submitForm(100, 6.5, 10);
@@ -170,8 +177,8 @@ describe('HomeComponent', () => {
 
   it('should reset result to 0 after submitting invalid form', () => {
     const gasolineCalculatorService = fixture.debugElement.injector.get(
-      GasolineCalculatorService
-    ) as any; // TODO: add correct type
+      GasolineCalculatorMockService
+    );
     gasolineCalculatorService.calculate.mockReturnValue(68.21);
 
     submitForm(100, 6.5, 10);
@@ -189,7 +196,7 @@ describe('HomeComponent', () => {
   it('should set cookies with last valid form values', () => {
     const expectedGasolinePrice = 6.5;
     const expectedDistancePerLiter = 10;
-    const cookieService = TestBed.inject(CookieService);
+    const cookieService = TestBed.inject(CookieMockService);
 
     submitForm(100, expectedGasolinePrice, expectedDistancePerLiter, true);
 
@@ -206,7 +213,7 @@ describe('HomeComponent', () => {
   it('should get last valid form values from cookies on init', () => {
     const expectedGasolinePrice = '6.5';
     const expectedDistancePerLiter = '10';
-    const cookieService = TestBed.inject(CookieService) as any; // TODO: add correct type
+    const cookieService = TestBed.inject(CookieMockService);
 
     cookieService.get.mockImplementation((name: string) => {
       if (name === LAST_GASOLINE_PRICE_COOKIE_NAME) {

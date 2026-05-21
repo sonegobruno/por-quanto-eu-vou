@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ThemeService } from './theme.service';
 import { CookieService } from '../cookie/cookie.service';
+import { CookieMockService } from '../cookie/cookie-mock.service';
 
 describe('ThemeService', () => {
   let service: ThemeService;
@@ -10,12 +11,10 @@ describe('ThemeService', () => {
     TestBed.configureTestingModule({
       providers: [
         ThemeService,
+        CookieMockService,
         {
           provide: CookieService,
-          useValue: {
-            get: vi.fn(),
-            set: vi.fn(),
-          } as Pick<CookieService, 'get' | 'set'>,
+          useExisting: CookieMockService,
         },
       ],
     });
