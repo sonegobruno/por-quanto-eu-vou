@@ -12,6 +12,7 @@ import {
 } from '@app/home/constants/last-usage-cookie-name';
 import { CookieService } from '@app/shared/services/cookie/cookie.service';
 import { CookieMockService } from '@app/shared/services/cookie/cookie-mock.service';
+import { getByTestId } from '@app/shared/utils/test/test-utils';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -82,6 +83,22 @@ describe('HomeComponent', () => {
     inputIsRoundTrip.nativeElement.dispatchEvent(new Event('input'));
 
     form.nativeElement.dispatchEvent(new Event('submit'));
+  }
+
+  function calculateWithResult(result: number) {
+    const gasolineCalculatorService = fixture.debugElement.injector.get(
+      GasolineCalculatorMockService
+    );
+    gasolineCalculatorService.calculate.mockReturnValue(result);
+    submitForm(100, 6.5, 10);
+    fixture.detectChanges();
+  }
+
+  function setDividedBy(value: string) {
+    const input = getByTestId(fixture, 'home-divided-by');
+    input.nativeElement.value = value;
+    input.nativeElement.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
   }
 
   it('should create', () => {
@@ -237,5 +254,57 @@ describe('HomeComponent', () => {
 
     expect(inputGasolinePrice.nativeElement.value).toBe(expectedGasolinePrice);
     expect(inputDistancePerLiter.nativeElement.value).toBe(expectedDistancePerLiter);
+  });
+
+  describe('divided by', () => {
+    it('should not show divided by input when result is 0', () => {
+      const dividedByInput = getByTestId(fixture, 'home-divided-by');
+
+      expect(dividedByInput).toBeNull();
+    });
+
+    it('should show divided by input when result is greater than 0', () => {
+      calculateWithResult(68.21);
+
+      const dividedByInput = getByTestId(fixture, 'home-divided-by');
+
+      expect(dividedByInput).not.toBeNull();
+    });
+
+    it('should not show divided result when divisor is empty', () => {
+      calculateWithResult(68.21);
+
+      const dividedResult = getByTestId(fixture, 'home-divided-result');
+
+      expect(dividedResult).toBeNull();
+    });
+
+    it('should not show divided result when divisor is 0', () => {
+      calculateWithResult(68.21);
+      setDividedBy('0');
+
+      const dividedResult = getByTestId(fixture, 'home-divided-result');
+
+      expect(dividedResult).toBeNull();
+    });
+
+    it('should reflect divided result in the view', () => {
+      calculateWithResult(68.21);
+      setDividedBy('2');
+
+      const dividedResult = getByTestId(fixture, 'home-divided-result');
+
+      expect(dividedResult.nativeElement.textContent).toBe('R$34.11');
+    });
+
+    it('should hide divided by input after submitting invalid form', () => {
+      calculateWithResult(68.21);
+      expect(getByTestId(fixture, 'home-divided-by')).not.toBeNull();
+
+      submitForm(null, null, null);
+      fixture.detectChanges();
+
+      expect(getByTestId(fixture, 'home-divided-by')).toBeNull();
+    });
   });
 });
