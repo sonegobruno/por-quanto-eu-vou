@@ -1,7 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
 import { SnackbarService } from './snackbar.service';
-import { SNACKBAR } from './snackbar-port';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+class MockMatSnackBarMock {
+  open = vi.fn();
+}
 
 describe('SnackbarService', () => {
   let service: SnackbarService;
@@ -10,9 +14,10 @@ describe('SnackbarService', () => {
     TestBed.configureTestingModule({
       providers: [
         SnackbarService,
+        MockMatSnackBarMock,
         {
-          provide: SNACKBAR,
-          useValue: { open: vi.fn() },
+          provide: MatSnackBar,
+          useExisting: MockMatSnackBarMock,
         },
       ],
     });
@@ -24,7 +29,7 @@ describe('SnackbarService', () => {
   });
 
   it('should call open method of snackBar with correct parameters', () => {
-    const snackBar = TestBed.inject(SNACKBAR);
+    const snackBar = TestBed.inject(MockMatSnackBarMock);
     const message = 'Test message';
 
     service.warn(message);

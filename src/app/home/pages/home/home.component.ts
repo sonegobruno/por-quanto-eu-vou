@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { GasolineCalculatorService } from '@app/home/services/gasoline-calculator/gasoline-calculator.service';
-import { signal } from '@angular/core';
 import { form, FormField, FormRoot } from '@angular/forms/signals';
 import { FormService } from '@app/shared/services/form/form.service';
 import { CalculatorForm, calculatorFormSchema } from '@app/home/form/calculator-form';
@@ -71,6 +77,29 @@ export class HomeComponent implements OnInit {
   });
 
   protected result = signal<number>(0);
+
+  protected dividedBy = signal<number | null>(null);
+
+  protected dividedResult = computed(() => {
+    const divisor = this.dividedBy();
+    const total = this.result();
+
+    if (!isValidNumber(divisor) || divisor === 0 || !isValidNumber(total)) {
+      return null;
+    }
+
+    return total / divisor;
+  });
+
+  protected onDividedByChange(event: Event): void {
+    const target = event.target;
+
+    if (!(target instanceof HTMLInputElement)) {
+      throw new ReferenceError('Event target is not an HTMLInputElement');
+    }
+    const value = toNumber(target.value);
+    this.dividedBy.set(isValidNumber(value) ? value : null);
+  }
 
   ngOnInit(): void {
     this.restoreLastValues();

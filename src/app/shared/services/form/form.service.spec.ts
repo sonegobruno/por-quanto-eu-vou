@@ -2,7 +2,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { FormService } from './form.service';
 import { SnackbarService } from '../snackbar/snackbar.service';
+import { SnackbarMockService } from '../snackbar/snackbar-mock.service';
 import { LogService } from '@app/core/services/log/log.service';
+import { LogMockService } from '@app/core/services/log/log-mock.service';
 
 describe('FormService', () => {
   let service: FormService;
@@ -11,8 +13,10 @@ describe('FormService', () => {
     TestBed.configureTestingModule({
       providers: [
         FormService,
-        { provide: SnackbarService, useValue: { warn: vi.fn() } as Pick<SnackbarService, 'warn'> },
-        { provide: LogService, useValue: { warn: vi.fn() } as Pick<LogService, 'warn'> },
+        LogMockService,
+        SnackbarMockService,
+        { provide: SnackbarService, useExisting: SnackbarMockService },
+        { provide: LogService, useExisting: LogMockService },
       ],
     });
     service = TestBed.inject(FormService);
@@ -23,8 +27,8 @@ describe('FormService', () => {
   });
 
   it('should handle error and call snackBarService and logService', () => {
-    const snackBarService = TestBed.inject(SnackbarService);
-    const logService = TestBed.inject(LogService);
+    const snackBarService = TestBed.inject(SnackbarMockService);
+    const logService = TestBed.inject(LogMockService);
 
     const errorSummary = [
       {

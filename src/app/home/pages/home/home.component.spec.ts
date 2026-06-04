@@ -3,12 +3,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { By } from '@angular/platform-browser';
 import { GasolineCalculatorService } from '@app/home/services/gasoline-calculator/gasoline-calculator.service';
+import { GasolineCalculatorMockService } from '@app/home/services/gasoline-calculator/gasoline-calculator-mock.service';
 import { FormService } from '@app/shared/services/form/form.service';
+import { FormMockService } from '@app/shared/services/form/form-mock.service';
 import {
   LAST_DISTANCE_PER_LITER_COOKIE_NAME,
   LAST_GASOLINE_PRICE_COOKIE_NAME,
 } from '@app/home/constants/last-usage-cookie-name';
 import { CookieService } from '@app/shared/services/cookie/cookie.service';
+import { CookieMockService } from '@app/shared/services/cookie/cookie-mock.service';
+import { getByTestId } from '@app/shared/utils/test/test-utils';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -18,17 +22,17 @@ describe('HomeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
+        FormMockService,
         {
           provide: FormService,
-          useValue: { handleError: vi.fn() } as Pick<FormService, 'handleError'>,
+          useExisting: FormMockService,
         },
+        CookieMockService,
         {
           provide: CookieService,
-          useValue: {
-            get: vi.fn(),
-            set: vi.fn(),
-          } as Pick<CookieService, 'get' | 'set'>,
+          useExisting: CookieMockService,
         },
+        GasolineCalculatorMockService,
       ],
     })
       .overrideComponent(HomeComponent, {
@@ -36,7 +40,7 @@ describe('HomeComponent', () => {
           providers: [
             {
               provide: GasolineCalculatorService,
-              useValue: { calculate: vi.fn() } as Pick<GasolineCalculatorService, 'calculate'>,
+              useExisting: GasolineCalculatorMockService,
             },
           ],
         },
@@ -81,12 +85,28 @@ describe('HomeComponent', () => {
     form.nativeElement.dispatchEvent(new Event('submit'));
   }
 
+  function calculateWithResult(result: number) {
+    const gasolineCalculatorService = fixture.debugElement.injector.get(
+      GasolineCalculatorMockService
+    );
+    gasolineCalculatorService.calculate.mockReturnValue(result);
+    submitForm(100, 6.5, 10);
+    fixture.detectChanges();
+  }
+
+  function setDividedBy(value: string) {
+    const input = getByTestId(fixture, 'home-divided-by');
+    input.nativeElement.value = value;
+    input.nativeElement.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+  }
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should call formService handleErrors if fields has required error', () => {
-    const formService = TestBed.inject(FormService);
+    const formService = TestBed.inject(FormMockService);
 
     submitForm(null, null, null);
 
@@ -99,7 +119,7 @@ describe('HomeComponent', () => {
     );
   });
   it('should call formService handleErrors if field has min error', () => {
-    const formService = TestBed.inject(FormService);
+    const formService = TestBed.inject(FormMockService);
 
     submitForm(1, 1, 1);
 
@@ -113,7 +133,7 @@ describe('HomeComponent', () => {
   });
 
   it('should call formService handleErrors if field has max error', () => {
-    const formService = TestBed.inject(FormService);
+    const formService = TestBed.inject(FormMockService);
 
     submitForm(1000000, 100, 100);
 
@@ -129,7 +149,9 @@ describe('HomeComponent', () => {
   });
 
   it('should call calculation if form is valid', () => {
-    const gasolineCalculatorService = fixture.debugElement.injector.get(GasolineCalculatorService);
+    const gasolineCalculatorService = fixture.debugElement.injector.get(
+      GasolineCalculatorMockService
+    );
     submitForm(100, 6.5, 10);
 
     expect(gasolineCalculatorService.calculate).toHaveBeenCalledWith({
@@ -142,7 +164,9 @@ describe('HomeComponent', () => {
 
   // TODO: fix round trip
   it.skip('should reflect isRoundTrip value', () => {
-    const gasolineCalculatorService = fixture.debugElement.injector.get(GasolineCalculatorService);
+    const gasolineCalculatorService = fixture.debugElement.injector.get(
+      GasolineCalculatorMockService
+    );
     submitForm(100, 6.5, 10, true);
 
     expect(gasolineCalculatorService.calculate).toHaveBeenCalledWith({
@@ -155,8 +179,8 @@ describe('HomeComponent', () => {
 
   it('should reflect calculation result in the view', () => {
     const gasolineCalculatorService = fixture.debugElement.injector.get(
-      GasolineCalculatorService
-    ) as any; // TODO: add correct type
+      GasolineCalculatorMockService
+    );
     gasolineCalculatorService.calculate.mockReturnValue(68.21);
 
     submitForm(100, 6.5, 10);
@@ -170,8 +194,8 @@ describe('HomeComponent', () => {
 
   it('should reset result to 0 after submitting invalid form', () => {
     const gasolineCalculatorService = fixture.debugElement.injector.get(
-      GasolineCalculatorService
-    ) as any; // TODO: add correct type
+      GasolineCalculatorMockService
+    );
     gasolineCalculatorService.calculate.mockReturnValue(68.21);
 
     submitForm(100, 6.5, 10);
@@ -189,7 +213,7 @@ describe('HomeComponent', () => {
   it('should set cookies with last valid form values', () => {
     const expectedGasolinePrice = 6.5;
     const expectedDistancePerLiter = 10;
-    const cookieService = TestBed.inject(CookieService);
+    const cookieService = TestBed.inject(CookieMockService);
 
     submitForm(100, expectedGasolinePrice, expectedDistancePerLiter, true);
 
@@ -206,7 +230,7 @@ describe('HomeComponent', () => {
   it('should get last valid form values from cookies on init', () => {
     const expectedGasolinePrice = '6.5';
     const expectedDistancePerLiter = '10';
-    const cookieService = TestBed.inject(CookieService) as any; // TODO: add correct type
+    const cookieService = TestBed.inject(CookieMockService);
 
     cookieService.get.mockImplementation((name: string) => {
       if (name === LAST_GASOLINE_PRICE_COOKIE_NAME) {
@@ -230,5 +254,57 @@ describe('HomeComponent', () => {
 
     expect(inputGasolinePrice.nativeElement.value).toBe(expectedGasolinePrice);
     expect(inputDistancePerLiter.nativeElement.value).toBe(expectedDistancePerLiter);
+  });
+
+  describe('divided by', () => {
+    it('should not show divided by input when result is 0', () => {
+      const dividedByInput = getByTestId(fixture, 'home-divided-by');
+
+      expect(dividedByInput).toBeNull();
+    });
+
+    it('should show divided by input when result is greater than 0', () => {
+      calculateWithResult(68.21);
+
+      const dividedByInput = getByTestId(fixture, 'home-divided-by');
+
+      expect(dividedByInput).not.toBeNull();
+    });
+
+    it('should not show divided result when divisor is empty', () => {
+      calculateWithResult(68.21);
+
+      const dividedResult = getByTestId(fixture, 'home-divided-result');
+
+      expect(dividedResult).toBeNull();
+    });
+
+    it('should not show divided result when divisor is 0', () => {
+      calculateWithResult(68.21);
+      setDividedBy('0');
+
+      const dividedResult = getByTestId(fixture, 'home-divided-result');
+
+      expect(dividedResult).toBeNull();
+    });
+
+    it('should reflect divided result in the view', () => {
+      calculateWithResult(68.21);
+      setDividedBy('2');
+
+      const dividedResult = getByTestId(fixture, 'home-divided-result');
+
+      expect(dividedResult.nativeElement.textContent).toBe('R$34.11');
+    });
+
+    it('should hide divided by input after submitting invalid form', () => {
+      calculateWithResult(68.21);
+      expect(getByTestId(fixture, 'home-divided-by')).not.toBeNull();
+
+      submitForm(null, null, null);
+      fixture.detectChanges();
+
+      expect(getByTestId(fixture, 'home-divided-by')).toBeNull();
+    });
   });
 });

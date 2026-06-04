@@ -42,5 +42,23 @@
     <h2 class="home__result-title">Custo estimado</h2>
     <strong data-testid="home-result" class="home__result-value mt-3">{{ result() | currency:'BRL'}}</strong>
     <p class="home__result-sub-title mt-3">Os valores podem variar conforme o trânsito e condução.</p>
+
+    @if(result() > 0) {
+      <mat-form-field class="w-full mt-3">
+        <mat-label>Dividido por</mat-label>
+        <input
+          type="number"
+          matInput
+          data-testid="home-divided-by"
+          [value]="dividedBy() ?? ''"
+          (input)="onDividedByChange($event)"
+          placeholder="Digite o divisor"
+        >
+      </mat-form-field>
+
+      @if (dividedResult() !== null) {
+        <strong data-testid="home-divided-result" class="home__result-value mt-3">{{ dividedResult() | currency:'BRL' }}</strong>
+      }
+    }
   </div>
 </div>

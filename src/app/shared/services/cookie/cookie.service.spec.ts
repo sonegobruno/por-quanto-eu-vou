@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { CookieService } from './cookie.service';
-import { now } from '@app/shared/utils/date/date-utils';
-import { addMonths } from 'date-fns';
+import { addMonths } from '@app/shared/utils/date/date-utils';
 import { CookieService as NgxCookieService } from 'ngx-cookie-service';
 
 describe('CookieService', () => {
@@ -21,6 +20,11 @@ describe('CookieService', () => {
     service = TestBed.inject(CookieService);
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
@@ -35,13 +39,17 @@ describe('CookieService', () => {
   });
 
   it('should call set method of cookie service with expiration default', () => {
+    const fixedNow = new Date('2024-06-15T12:00:00.000Z');
+    vi.useFakeTimers();
+    vi.setSystemTime(fixedNow);
+
     const cookieService = TestBed.inject(NgxCookieService);
     const cookieName = 'testCookie';
     const cookieValue = 'testValue';
 
     service.set(cookieName, cookieValue);
 
-    expect(cookieService.set).toHaveBeenCalledWith(cookieName, cookieValue, addMonths(now(), 6));
+    expect(cookieService.set).toHaveBeenCalledWith(cookieName, cookieValue, addMonths(fixedNow, 6));
   });
 
   it('should call set method of cookie service with expiration', () => {
