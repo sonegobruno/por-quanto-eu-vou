@@ -52,23 +52,17 @@ describe('HomeComponent', () => {
     await fixture.whenStable();
   });
 
-  function submitForm(
+  async function submitForm(
     distance: number | null,
     gasolinePrice: number | null,
     distancePerLiter: number | null,
     isRoundTrip: boolean = false
   ) {
-    const form = fixture.debugElement.query(By.css('[data-testid="home-form"]'));
-    const inputDistance = fixture.debugElement.query(By.css('[data-testid="home-distance"]'));
-    const inputGasolinePrice = fixture.debugElement.query(
-      By.css('[data-testid="home-gasoline-price"]')
-    );
-    const inputDistancePerLiter = fixture.debugElement.query(
-      By.css('[data-testid="home-distance-per-liter"]')
-    );
-    const inputIsRoundTrip = fixture.debugElement.query(
-      By.css('[data-testid="home-is-round-trip"]')
-    );
+    const form = getByTestId(fixture, 'home-form');
+    const inputDistance = getByTestId(fixture, 'home-distance');
+    const inputGasolinePrice = getByTestId(fixture, 'home-gasoline-price');
+    const inputDistancePerLiter = getByTestId(fixture, 'home-distance-per-liter');
+    const inputIsRoundTrip = getByTestId(fixture, 'home-is-round-trip');
 
     inputGasolinePrice.nativeElement.value = gasolinePrice?.toString() || '';
     inputGasolinePrice.nativeElement.dispatchEvent(new Event('input'));
@@ -83,15 +77,17 @@ describe('HomeComponent', () => {
     inputIsRoundTrip.nativeElement.dispatchEvent(new Event('input'));
 
     form.nativeElement.dispatchEvent(new Event('submit'));
+
+    await fixture.whenStable();
+    fixture.detectChanges();
   }
 
-  function calculateWithResult(result: number) {
+  async function calculateWithResult(result: number) {
     const gasolineCalculatorService = fixture.debugElement.injector.get(
       GasolineCalculatorMockService
     );
     gasolineCalculatorService.calculate.mockReturnValue(result);
-    submitForm(100, 6.5, 10);
-    fixture.detectChanges();
+    await submitForm(100, 6.5, 10);
   }
 
   function setDividedBy(value: string) {
@@ -105,10 +101,10 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call formService handleErrors if fields has required error', () => {
+  it('should call formService handleErrors if fields has required error', async () => {
     const formService = TestBed.inject(FormMockService);
 
-    submitForm(null, null, null);
+    await submitForm(null, null, null);
 
     expect(formService.handleError).toHaveBeenCalledWith(
       expect.arrayContaining([
@@ -118,10 +114,10 @@ describe('HomeComponent', () => {
       ])
     );
   });
-  it('should call formService handleErrors if field has min error', () => {
+  it('should call formService handleErrors if field has min error', async () => {
     const formService = TestBed.inject(FormMockService);
 
-    submitForm(1, 1, 1);
+    await submitForm(1, 1, 1);
 
     expect(formService.handleError).toHaveBeenCalledWith(
       expect.arrayContaining([
@@ -132,10 +128,10 @@ describe('HomeComponent', () => {
     );
   });
 
-  it('should call formService handleErrors if field has max error', () => {
+  it('should call formService handleErrors if field has max error', async () => {
     const formService = TestBed.inject(FormMockService);
 
-    submitForm(1000000, 100, 100);
+    await submitForm(1000000, 100, 100);
 
     expect(formService.handleError).toHaveBeenCalledWith(
       expect.arrayContaining([
@@ -148,11 +144,11 @@ describe('HomeComponent', () => {
     );
   });
 
-  it('should call calculation if form is valid', () => {
+  it('should call calculation if form is valid', async () => {
     const gasolineCalculatorService = fixture.debugElement.injector.get(
       GasolineCalculatorMockService
     );
-    submitForm(100, 6.5, 10);
+    await submitForm(100, 6.5, 10);
 
     expect(gasolineCalculatorService.calculate).toHaveBeenCalledWith({
       distance: 100,
@@ -163,11 +159,11 @@ describe('HomeComponent', () => {
   });
 
   // TODO: fix round trip
-  it.skip('should reflect isRoundTrip value', () => {
+  it.skip('should reflect isRoundTrip value', async () => {
     const gasolineCalculatorService = fixture.debugElement.injector.get(
       GasolineCalculatorMockService
     );
-    submitForm(100, 6.5, 10, true);
+    await submitForm(100, 6.5, 10, true);
 
     expect(gasolineCalculatorService.calculate).toHaveBeenCalledWith({
       distance: 100,
@@ -177,45 +173,41 @@ describe('HomeComponent', () => {
     });
   });
 
-  it('should reflect calculation result in the view', () => {
+  it('should reflect calculation result in the view', async () => {
     const gasolineCalculatorService = fixture.debugElement.injector.get(
       GasolineCalculatorMockService
     );
     gasolineCalculatorService.calculate.mockReturnValue(68.21);
 
-    submitForm(100, 6.5, 10);
-
-    fixture.detectChanges();
+    await submitForm(100, 6.5, 10);
 
     expect(
       fixture.debugElement.query(By.css('[data-testid="home-result"]')).nativeElement.textContent
     ).toBe('R$68.21');
   });
 
-  it('should reset result to 0 after submitting invalid form', () => {
+  it('should reset result to 0 after submitting invalid form', async () => {
     const gasolineCalculatorService = fixture.debugElement.injector.get(
       GasolineCalculatorMockService
     );
     gasolineCalculatorService.calculate.mockReturnValue(68.21);
 
-    submitForm(100, 6.5, 10);
-    fixture.detectChanges();
+    await submitForm(100, 6.5, 10);
 
     const result = fixture.debugElement.query(By.css('[data-testid="home-result"]'));
     expect(result.nativeElement.textContent).toContain('R$68.21');
 
-    submitForm(null, null, null);
-    fixture.detectChanges();
+    await submitForm(null, null, null);
 
     expect(result.nativeElement.textContent).toContain('R$0.00');
   });
 
-  it('should set cookies with last valid form values', () => {
+  it('should set cookies with last valid form values', async () => {
     const expectedGasolinePrice = 6.5;
     const expectedDistancePerLiter = 10;
     const cookieService = TestBed.inject(CookieMockService);
 
-    submitForm(100, expectedGasolinePrice, expectedDistancePerLiter, true);
+    await submitForm(100, expectedGasolinePrice, expectedDistancePerLiter, true);
 
     expect(cookieService.set).toHaveBeenCalledWith(
       LAST_GASOLINE_PRICE_COOKIE_NAME,
@@ -263,24 +255,24 @@ describe('HomeComponent', () => {
       expect(dividedByInput).toBeNull();
     });
 
-    it('should show divided by input when result is greater than 0', () => {
-      calculateWithResult(68.21);
+    it('should show divided by input when result is greater than 0', async () => {
+      await calculateWithResult(68.21);
 
       const dividedByInput = getByTestId(fixture, 'home-divided-by');
 
       expect(dividedByInput).not.toBeNull();
     });
 
-    it('should not show divided result when divisor is empty', () => {
-      calculateWithResult(68.21);
+    it('should not show divided result when divisor is empty', async () => {
+      await calculateWithResult(68.21);
 
       const dividedResult = getByTestId(fixture, 'home-divided-result');
 
       expect(dividedResult).toBeNull();
     });
 
-    it('should not show divided result when divisor is 0', () => {
-      calculateWithResult(68.21);
+    it('should not show divided result when divisor is 0', async () => {
+      await calculateWithResult(68.21);
       setDividedBy('0');
 
       const dividedResult = getByTestId(fixture, 'home-divided-result');
@@ -288,8 +280,8 @@ describe('HomeComponent', () => {
       expect(dividedResult).toBeNull();
     });
 
-    it('should reflect divided result in the view', () => {
-      calculateWithResult(68.21);
+    it('should reflect divided result in the view', async () => {
+      await calculateWithResult(68.21);
       setDividedBy('2');
 
       const dividedResult = getByTestId(fixture, 'home-divided-result');
@@ -297,12 +289,11 @@ describe('HomeComponent', () => {
       expect(dividedResult.nativeElement.textContent).toBe('R$34.11');
     });
 
-    it('should hide divided by input after submitting invalid form', () => {
-      calculateWithResult(68.21);
+    it('should hide divided by input after submitting invalid form', async () => {
+      await calculateWithResult(68.21);
       expect(getByTestId(fixture, 'home-divided-by')).not.toBeNull();
 
-      submitForm(null, null, null);
-      fixture.detectChanges();
+      await submitForm(null, null, null);
 
       expect(getByTestId(fixture, 'home-divided-by')).toBeNull();
     });
