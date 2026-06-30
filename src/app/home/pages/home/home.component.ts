@@ -22,6 +22,9 @@ import {
 import { isValidNumber, toNumber } from '@app/shared/utils/number';
 import { IconComponent } from '@app/shared/components/icon/icon.component';
 import { CookieService } from '@app/shared/services/cookie/cookie.service';
+import { MaxInputNumber } from '@app/shared/directives/max-input-number/max-input-number';
+import { DIVIDED_BY_MAX, DIVIDED_BY_MIN } from '@app/home/constants/calculate';
+import { MinInputNumber } from '@app/shared/directives/min-input-number/min-input-number';
 
 @Component({
   selector: 'pqev-home',
@@ -34,6 +37,8 @@ import { CookieService } from '@app/shared/services/cookie/cookie.service';
     MatButtonModule,
     CurrencyPipe,
     IconComponent,
+    MaxInputNumber,
+    MinInputNumber,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -44,6 +49,9 @@ export class HomeComponent implements OnInit {
   private readonly gasolineCalculatorService = inject(GasolineCalculatorService);
   private readonly formService = inject(FormService);
   private readonly cookie = inject(CookieService);
+
+  protected readonly dividedByMax = DIVIDED_BY_MAX;
+  protected readonly dividedByMin = DIVIDED_BY_MIN;
 
   private calculator = signal<CalculatorForm>({
     distance: NaN,
