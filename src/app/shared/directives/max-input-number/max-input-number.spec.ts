@@ -1,6 +1,8 @@
 import { Component, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MaxInputNumber } from './max-input-number';
+import { SnackbarMockService } from '@app/shared/services/snackbar/snackbar-mock.service';
+import { SnackbarService } from '@app/shared/services/snackbar/snackbar.service';
 
 @Component({
   template: `<input #input type="number" [pqevMaxNumber]="max" />`,
@@ -18,6 +20,13 @@ describe('MaxInputNumber', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TestHostComponent],
+      providers: [
+        SnackbarMockService,
+        {
+          provide: SnackbarService,
+          useExisting: SnackbarMockService,
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);
@@ -50,14 +59,18 @@ describe('MaxInputNumber', () => {
   });
 
   it('should revert to the last valid value when input exceeds the max', () => {
+    const snackbarService = TestBed.inject(SnackbarMockService);
     setValueWithInput('10');
 
     setValueWithInput('100');
     expect(input.value).toBe('10');
+    expect(snackbarService.warn).toHaveBeenCalledWith('Valor maximo deve ser 99');
   });
 
   it('should block pasting a value above the max', () => {
+    const snackbarService = TestBed.inject(SnackbarMockService);
     const allowed = dispatchPaste('100');
     expect(allowed).toBe(false);
+    expect(snackbarService.warn).toHaveBeenCalledWith('Valor maximo deve ser 99');
   });
 });

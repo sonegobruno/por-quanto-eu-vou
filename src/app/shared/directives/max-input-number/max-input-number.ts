@@ -1,4 +1,5 @@
 import { Directive, effect, ElementRef, HostListener, inject, input } from '@angular/core';
+import { SnackbarService } from '@app/shared/services/snackbar/snackbar.service';
 
 const INSERT_INPUT_TYPES = new Set([
   'insertText',
@@ -14,6 +15,8 @@ export class MaxInputNumber {
   public readonly pqevMaxNumber = input.required<number>();
 
   private readonly inputElement = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
+
+  private readonly snackbarService = inject(SnackbarService);
 
   #isCorrectingValue = false;
 
@@ -37,6 +40,7 @@ export class MaxInputNumber {
       const parsed = Number.parseFloat(insertedText);
       if (!Number.isNaN(parsed) && parsed > this.pqevMaxNumber()) {
         event.preventDefault();
+        this.snackbarService.warn('Valor maximo deve ser ' + this.pqevMaxNumber());
       }
       return;
     }
@@ -66,6 +70,7 @@ export class MaxInputNumber {
     this.inputElement.value = this.#lastValidValue;
     this.inputElement.dispatchEvent(new Event('input', { bubbles: true }));
     this.#isCorrectingValue = false;
+    this.snackbarService.warn('Valor maximo deve ser ' + this.pqevMaxNumber());
   }
 
   private syncLastValidValue(): void {

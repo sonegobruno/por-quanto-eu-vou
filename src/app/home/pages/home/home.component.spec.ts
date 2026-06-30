@@ -13,6 +13,8 @@ import {
 import { CookieService } from '@app/shared/services/cookie/cookie.service';
 import { CookieMockService } from '@app/shared/services/cookie/cookie-mock.service';
 import { getByTestId } from '@app/shared/utils/test/test-utils';
+import { SnackbarMockService } from '@app/shared/services/snackbar/snackbar-mock.service';
+import { SnackbarService } from '@app/shared/services/snackbar/snackbar.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -41,6 +43,11 @@ describe('HomeComponent', () => {
             {
               provide: GasolineCalculatorService,
               useExisting: GasolineCalculatorMockService,
+            },
+            SnackbarMockService,
+            {
+              provide: SnackbarService,
+              useExisting: SnackbarMockService,
             },
           ],
         },
